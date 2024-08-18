@@ -1,0 +1,59 @@
+﻿@model EcommerceProject.Models.RegisterViewModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/assets/css/login.css">
+    <title>Register</title>
+</head>
+<body>
+    <section>
+        <div class="imgBx">
+            <img src="~/assets/images/product-thumbnail-2.jpg" alt="Background Image">
+        </div>
+        <div class="contentBx">
+            <div class="formBx">
+                <h2>Register</h2>
+                @using (Html.BeginForm("Register", "User", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="inputBx">
+                        @Html.LabelFor(m => m.Name)
+                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control", required = "required" })
+                        @Html.ValidationMessageFor(m => m.Name)
+                    </div>
+                    <div class="inputBx">
+                        @Html.LabelFor(m => m.Email)
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email", required = "required" })
+                        @Html.ValidationMessageFor(m => m.Email)
+                    </div>
+                    <div class="inputBx">
+                        @Html.LabelFor(m => m.Password)
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", required = "required" })
+                        @Html.ValidationMessageFor(m => m.Password)
+                    </div>
+                    <div class="inputBx">
+                        @Html.LabelFor(m => m.ConfirmPassword)
+                        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", required = "required" })
+                        @Html.ValidationMessageFor(m => m.ConfirmPassword)
+                    </div>
+                    <div class="inputBx">
+                        <input type="submit" value="Register" class="btn btn-primary">
+                    </div>
+                    <div class="inputBx">
+                        <p>Already have an account? <a href="@Url.Action("Login", "Account")">Login here</a></p>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+    @Scripts.Render("~/bundles/jqueryval")
+</body>
+</html>

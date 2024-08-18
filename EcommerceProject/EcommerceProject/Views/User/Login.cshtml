@@ -1,0 +1,78 @@
+﻿@model EcommerceProject.Models.User
+@{
+    var loca = ViewBag.LoginSuccess;
+    ViewBag.Title = "Login";
+    Layout = null;
+
+}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/assets/css/login.css">
+    
+</head>
+<body>
+    <section>
+    <div class="imgBx">
+        <img src="~/assets/images/product-thumbnail-2.jpg" alt="Background Image">
+    </div>
+    <div class="contentBx">
+        <div class="formBx">
+            <h2>Register</h2>
+            @using (Html.BeginForm("Login", "User", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+
+                <div class="inputBx">
+                    @Html.LabelFor(m => m.Email)
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email", required = "required" })
+                    @Html.ValidationMessageFor(m => m.Email)
+                </div>
+                <div class="inputBx">
+                    @Html.LabelFor(m => m.Password)
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control", required = "required" })
+                    @Html.ValidationMessageFor(m => m.Password)
+                </div>
+
+                <div class="inputBx">
+                    <input type="submit" value="Login" class="btn btn-primary">
+                </div>
+                <div class="inputBx">
+                    <p>Don't have Account '? <a href="@Url.Action("Register", "User")">Register here</a></p>
+                </div>
+                <div class="inputBx">
+                    <p>Forget your password? <a href="@Url.Action("ForgotPassword", "User")">recover it </a></p>
+                </div>
+            }
+        </div>
+    </div>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            var loginSuccess = @Html.Raw(Json.Encode(ViewBag.LoginSuccess));
+            var loginMessage = '@ViewBag.LoginMessage';
+
+            if (loginSuccess) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Login Successful!',
+                    text: 'Welcome back, @Session["FullName"]!',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+            } else if (loginMessage) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Login Failed!',
+                    text: loginMessage,
+                    showConfirmButton: true
+                });
+            }
+        });
+    </script>
+
+</body>

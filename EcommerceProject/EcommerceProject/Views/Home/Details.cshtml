@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewBag.Title = "Details";
+}
+
+@model EcommerceProject.Models.Product
+
+@{
+    ViewBag.Title = "Product Details";
+}
+
+<section id="product-details" class="padding-large">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="product-image">
+                    <img src="@Url.Content("~/assets/images/" + Model.Image_URL)" alt="@Model.Name" class="img-fluid">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h2>@Model.Name</h2>
+                <p>@Model.Description</p>
+                <div class="item-price text-primary">$@Model.Price.ToString("0.00")</div>
+                <form action="@Url.Action("AddToCart", "Home")" method="post">
+                    <input type="hidden" name="productId" value="@Model.ID" />
+                    <div class="form-group">
+                        <label for="quantity">Quantity</label>
+                        <input type="number" id="quantity" name="quantity" min="1" value="1" class="form-control" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add to Cart</button>
+                </form>
+
+                <div class="product-category">
+                    <p>Category: <a href="@Url.Action("Category", "Products", new { id = Model.Category.ID })">@Model.Category.Name</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

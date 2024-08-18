@@ -1,0 +1,53 @@
+﻿@model IEnumerable<EcommerceProject.Models.Product>
+
+@{
+    ViewBag.Title = "Product List";
+}
+
+<section id="selling-products" class="product-store bg-light-grey padding-large">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Best Selling Products</h2>
+        </div>
+        <form action="@Url.Action("AddToCart", "Home")" method="post">
+            @Html.AntiForgeryToken() <!-- Include this line -->
+
+            <div class="row d-flex flex-wrap">
+                @foreach (var product in Model)
+                {
+                    <div class="product-item col-lg-3 col-md-6 col-sm-6">
+                        <div class="image-holder">
+                            <img src="@Url.Content("~/assets/images/" + product.Image_URL)" alt="@product.Name" class="product-image">
+                        </div>
+                        <div class="cart-concern">
+                            <div class="cart-button d-flex justify-content-between align-items-center">
+                                <button type="button" class="btn-wrap cart-link d-flex align-items-center">
+                                    Add to cart <i class="icon icon-arrow-io"></i>
+                                </button>
+                                <button type="button" class="view-btn tooltip d-flex">
+                                    <i class="icon icon-screen-full"></i>
+                                    <span class="tooltip-text">Quick view</span>
+                                </button>
+                                <button type="button" class="wishlist-btn">
+                                    <i class="icon icon-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="product-detail">
+                            <h3 class="product-title">
+                                <a href="@Url.Action("Details", "Home", new { id = product.ID })">@product.Name</a>
+                            </h3>
+                            <div class="item-price text-primary">$@product.Price.ToString("0.00")</div>
+                            <div class="form-group">
+                                <label for="quantity_@product.ID">Quantity</label>
+                                <input type="number" id="quantity_@product.ID" name="cartItems[@product.ID].Quantity" min="1" value="1" class="form-control" />
+                                <input type="hidden" name="cartItems[@product.ID].ProductID" value="@product.ID" />
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <button type="submit" class="btn btn-primary">Add Selected to Cart</button>
+        </form>
+    </div>
+</section>

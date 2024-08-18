@@ -1,0 +1,162 @@
+﻿@model IEnumerable<EcommerceProject.Models.ShoppingCartItem>
+
+@{
+    ViewBag.Title = "Cart";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body {
+            margin-top: 20px;
+            background: #eee;
+        }
+
+        .ui-w-40 {
+            width: 40px !important;
+            height: auto;
+        }
+
+        .text-danger {
+            background: white;
+            --bs-text-opacity: 1;
+            color: #212529 !important;
+        }
+
+        .card {
+            box-shadow: 0 1px 15px 1px rgba(52, 40, 104, .08);
+        }
+
+        .ui-product-color {
+            display: inline-block;
+            overflow: hidden;
+            margin: .144em;
+            width: .875rem;
+            height: .875rem;
+            border-radius: 10rem;
+            -webkit-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15) inset;
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15) inset;
+            vertical-align: middle;
+        }
+
+        .product-image {
+            width: 140px;
+            border-radius: 30px;
+            height: auto;
+        }
+
+        .product-info {
+            padding-left: 1rem;
+        }
+
+        .btn {
+            border: none;
+            background: transparent;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 0.375rem;
+        }
+
+        .btn-default {
+            background-color: #f8f9fa;
+            border-radius: 0.375rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container px-3 my-5">
+        <div class="card">
+            <div class="card-header">
+                <h2>Shopping Cart</h2>
+            </div>
+            <div class="card-body">
+                @if (Model.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-bordered m-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-center py-3 px-4" style="min-width: 120px;">Image</th>
+                                    <th class="text-center py-3 px-4" style="min-width: 400px;">Product Name &amp; Details</th>
+                                    <th class="text-right py-3 px-4" style="width: 100px;">Price</th>
+                                    <th class="text-center py-3 px-4" style="width: 120px;">Quantity</th>
+                                    <th class="text-right py-3 px-4" style="width: 100px;">Total</th>
+                                    <th class="text-center align-middle py-3 px-0" style="width: 40px;"><a href="#" class="shop-tooltip float-none text-light" title="Clear cart"><i class="ino ion-md-trash"></i></a></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="text-center align-middle p-4">
+                                            <img src="@Url.Content("~/assets/images/" + item.Product.Image_URL)" class="product-image" alt="@item.Product.Name">
+                                        </td>
+                                        <td class="p-4 product-info">
+                                            <a href="#" class="d-block text-dark">@item.Product.Name</a>
+                                            <small>
+                                                <span class="text-muted">Color:</span>
+                                                <span class="ui-product-color ui-product-color-sm align-text-bottom" style="background:#e81e2c;"></span> &nbsp;
+                                                <span class="text-muted">Size: </span> EU 37 &nbsp;
+                                                <span class="text-muted">Ships from: </span> China
+                                            </small>
+                                        </td>
+                                        <td class="text-right font-weight-semibold align-middle p-4">$@item.Product.Price</td>
+                                        <td class="align-middle p-4">
+                                            @using (Html.BeginForm("UpdateQuantity", "Home", new { id = item.ProductID, operation = "decrease" }, FormMethod.Post))
+                                            {
+                                                <button type="submit" class="btn btn-default">-</button>
+                                            }
+                                            <input type="number" class="form-control text-center" value="@item.Quantity" readonly>
+                                            @using (Html.BeginForm("UpdateQuantity", "Home", new { id = item.ProductID, operation = "increase" }, FormMethod.Post))
+                                            {
+                                                <button type="submit" class="btn btn-default">+</button>
+                                            }
+                                        </td>
+                                        <td class="text-right font-weight-semibold align-middle p-4">$@(item.Quantity * item.Product.Price)</td>
+                                        <td class="text-center align-middle px-0">
+                                            @using (Html.BeginForm("DeleteItem", "Home", new { id = item.ProductID }, FormMethod.Post))
+                                            {
+                                                <button type="submit" class="shop-tooltip close float-none text-danger">X</button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="d-flex flex-wrap justify-content-between align-items-center pb-4">
+                        <div class="mt-4">
+                            <label class="text-muted font-weight-normal">Promocode</label>
+                            <input type="text" placeholder="ABC" class="form-control">
+                        </div>
+                        <div class="d-flex">
+                            <div class="text-right mt-4 mr-5">
+                                <label class="text-muted font-weight-normal m-0">Discount</label>
+                            </div>
+                            <div class="text-right mt-4">
+                                <label class="text-muted font-weight-normal m-0">Total price</label>
+                                <div class="text-large"><strong>$@ViewBag.TotalAmount</strong></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="float-right">
+                        <button type="button" class="btn btn-lg btn-default md-btn-flat mt-2 mr-3">Back to shopping</button>
+                        <button type="button" class="btn btn-lg btn-primary mt-2">Checkout</button>
+                    </div>
+                }
+                else
+                {
+                    <p>Your cart is empty.</p>
+                }
+            </div>
+        </div>
+    </div>
+</body>
+</html>
